@@ -8,23 +8,19 @@ extern keymap_config_t keymap_config;
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
-#define _QWERTY 0
-#define _COLEMAK 1
-#define _DVORAK 2
-#define _LOWER 3
-#define _RAISE 4
-#define _ADJUST 16
+#define _ADJUST 0
+#define _QWERTY 1
+#define _LOWER 2
+#define _RAISE 3
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
-  COLEMAK,
-  DVORAK,
   LOWER,
-  RAISE,
   ADJUST,
+  RAISE
 };
 
-// Fillers to make layering more clear
+// Fillers to make layering more clearn
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
@@ -49,7 +45,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RBRC,
         KC_LCTL, KC_LALT, KC_LGUI, LOWER, RAISE, KC_ENT, KC_SPC, KC_SPC, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
 
-
     /* Raise
     * ,-----------------------------------------------------------------------------------.
     * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
@@ -69,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_WHOM, KC_WSCH, KC_WFAV, KC_WREF, _______, _______, KC_PGUP, KC_VOLU, KC_VOLD, KC_MPLY, _______,
         _______, _______, _______, _______, _______, _______, _______, KC_PGDOWN, KC_MPRV, KC_MNXT, _______, _______,
         _______, KC_INSERT, KC_CUT, KC_COPY, KC_PASTE, _______, _______, KC_MUTE, KC_DEL, _______, _______, _______,
-        KC_LCTL, KC_LALT, KC_LGUI, LOWER, RAISE, KC_ENT, KC_SPC, KC_SPC, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
+        KC_LCTL, KC_LALT, KC_LGUI, LOWER, ADJUST, KC_ENT, KC_SPC, KC_SPC, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
 
     /* Lower
     * ,-----------------------------------------------------------------------------------.
@@ -84,21 +79,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * |      |      |      |      |      |      |      |      |      |      |      |      |
     * `-----------------------------------------------------------------------------------'
     */
-
     [_LOWER] = LAYOUT(
-        KC_TILD, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
+        KC_GRV, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINUS, KC_PLUS, KC_LCBR,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PLUS, KC_BSLASH, KC_DOUBLE_QUOTE,
-        _______, _______, _______, _______, _______, _______, _______, _______, KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET, KC_QUESTION, KC_RCBR,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, ),
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PIPE, KC_BSLASH, KC_DOUBLE_QUOTE,
+        KC_LSFT, _______, _______, _______, _______, _______, _______, _______, KC_LABK, KC_RABK, KC_QUESTION, KC_RCBR,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
 
-};
-
-#ifdef AUDIO_ENABLE
-float tone_qwerty[][2]     = SONG(QWERTY_SOUND);
-float tone_dvorak[][2]     = SONG(DVORAK_SOUND);
-float tone_colemak[][2]    = SONG(COLEMAK_SOUND);
-#endif
+    // /* Adjust (Lower + Raise)
+    //  * ,-----------------------------------------------------------------------------------.
+    //  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+    //  * |------+------+------+------+------+------+------+------+------+------+------+------|
+    //  * |      | Reset|RGB Tg|RGB Md|Hue Up|Hue Dn|Sat Up|Sat Dn|Val Up|Val Dn|      |  Del |
+    //  * |------+------+------+------+------+-------------+------+------+------+------+------|
+    //  * |      |      |      |Aud on|Audoff|AGnorm|AGswap|Qwerty|Colemk|Dvorak|      |      |
+    //  * |------+------+------+------+------+------|------+------+------+------+------+------|
+    //  * |      |      |      |      |      |      |      |      |      |      |      |      |
+    //  * |------+------+------+------+------+------+------+------+------+------+------+------|
+    //  * |      |      |      |      |      |             |      |      |      |      |      |
+    //  * `-----------------------------------------------------------------------------------'
+    //  */
+    [_ADJUST] = LAYOUT(
+        KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12,
+        _______, RESET, RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI, RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, KC_DEL,
+        _______, _______, _______, AU_ON, AU_OFF, AG_NORM, AG_SWAP, QWERTY, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______)};
 
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
@@ -109,28 +115,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-          PLAY_SONG(tone_qwerty);
-        #endif
-        persistent_default_layer_set(1UL<<_QWERTY);
-      }
-      return false;
-      break;
-    case COLEMAK:
-      if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-          PLAY_SONG(tone_colemak);
-        #endif
-        persistent_default_layer_set(1UL<<_COLEMAK);
-      }
-      return false;
-      break;
-    case DVORAK:
-      if (record->event.pressed) {
-        #ifdef AUDIO_ENABLE
-          PLAY_SONG(tone_dvorak);
-        #endif
-        persistent_default_layer_set(1UL<<_DVORAK);
+        // #ifdef AUDIO_ENABLE
+        //   PLAY_SONG(tone_qwerty);
+        // #endif
+        // persistent_default_layer_set(1UL<<_QWERTY);
       }
       return false;
       break;
